@@ -8,7 +8,7 @@ public class EnemyData : ScriptableObject
     //DESING DATA
     [Header("CONFIGURACION DE MOVIMIENTO")]
     [Tooltip("LA VELOCIDAD ES DE 0.1 A 5")]
-    [SerializeField][Range(0.1f,5f)] private float speed = 2f;
+    [SerializeField][Range(0.1f,15f)] private float speed = 2f;
     public float Speed{ get{  return speed; } set{ speed = value; } }
 
     [Header("CONFIGURACION DE ESTADISTICAS")]

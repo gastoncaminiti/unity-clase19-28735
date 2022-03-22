@@ -7,7 +7,7 @@ public class EnemyCollision : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         if(other.gameObject.CompareTag("Bullet")){
             GetComponent<Rigidbody>().angularVelocity = new Vector3(0f,5f,0f); //ROTATE FORCE
-            GetComponent<EnemyMovement>().enabled = false; //DISABLE MOVEMENT COMPONENT
+            GetComponent<Enemy>().enabled = false; //DISABLE MOVEMENT COMPONENT
             Invoke("DelayDestroy",2f); //DESTRUIR LUEGO DE DOS SEGUNDOS
             Destroy(other.gameObject);
         }

@@ -92,5 +92,24 @@ public class PlayerCollision : MonoBehaviour
             playerInventory.SeeInventoryThree();
             */
         }
-    }   
+    }  
+
+    private void OnParticleCollision(GameObject other) {
+         //Debug.Log(name + " COLISION CON " + other.gameObject.name);
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+           // Debug.Log("GAME OVER");
+           hitPoints--;
+           OnLivesChange?.Invoke(hitPoints);
+           Debug.Log("HP : "+hitPoints);
+           if(hitPoints < 1){
+               Debug.Log("GAME OVER");
+              // OnDeath?.Invoke();  
+               PlayerEvent.OnDeath();
+               Destroy(this);
+               Debug.Log("ENVIAR UNA NOTIFICACION A LOS INTERESADOS QUE ESTOY MUERTO");
+           }
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    } 
 }

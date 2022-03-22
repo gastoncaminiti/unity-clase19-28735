@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   hp: 5
-  rangeAttack: 7
+  rangeAttack: 20

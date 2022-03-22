@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 241b79b00b215434e8c882902b0b3662, type: 3}
+  m_Name: Player Bunny
+  m_EditorClassIdentifier: 
+  speed: 4
+  speedJump: 8
+  speedLimit: 15
+  cooldown: 2
+  bulletPrefab: {fileID: 3980811191154968484, guid: 4f65b6664313e36479d8362673bd845b, type: 3}
+  jumpSound: {fileID: 8300000, guid: 21200b4dea9bfd44c94f8fb49766703f, type: 3}
+  shootSound: {fileID: 8300000, guid: 055574a511d4ad44f819f25de0ded59a, type: 3}

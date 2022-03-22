@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 3980811191154968480}
   - component: {fileID: 3980811191154968487}
   - component: {fileID: 3980811191154968486}
+  - component: {fileID: 8525615644940624775}
   - component: {fileID: 3980811191154968485}
-  - component: {fileID: 3980811191154968481}
   m_Layer: 31
   m_Name: Bullet
   m_TagString: Bullet
@@ -83,6 +83,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8525615644940624775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980811191154968484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edfd290c3df73ef4ab3977c15d121875, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: {x: 0, y: 0, z: 1}
+  speed: 15
 --- !u!135 &3980811191154968485
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -96,17 +110,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3980811191154968481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980811191154968484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c38038edab801c046a8829ff12f07ea2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  direction: {x: 0, y: 0, z: 1}
-  speed: 50

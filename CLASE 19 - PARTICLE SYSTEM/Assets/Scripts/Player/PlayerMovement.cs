@@ -6,38 +6,24 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField] float speed = 2f;
-    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] private PlayerData playerData;
+
     [SerializeField] GameObject shootPoint;
-    [SerializeField] float cooldown = 2f;
-    [SerializeField] private bool canShoot = true;
-    [SerializeField] private float timePass = 0;
-
-    [SerializeField] private float speedJump = 1f;
-
     [SerializeField] private Animator playerAnimator;
-
-    private bool canJump;
+    [SerializeField] private Text playerNameLabel;
+    [SerializeField] private ParticleSystem stepVFX;
 
     private GameObject parentBullets;
-    float cameraAxisX = 0f;
-
-    [SerializeField] private AudioClip jumpSound;
-    [SerializeField] private AudioClip shootSound;
-
     private AudioSource audioPlayer;
     private Rigidbody rbPlayer;
-    //VARIABLES BOOLEANAS PARA CONTROLAR INPUTS
-    private bool isJump, isBack, isForward, isStatic;
-    public float speedLimit = 15f;
-
     private InventoryManager mgInventory;
-
-    [SerializeField] private Text playerNameLabel;
-    [SerializeField] private float rotateSensitivity  = 0.4f;
     private SavepointsManager svManager;
 
+    private float cameraAxisX = 0f;
+    private float timePass = 0;
+    private float rotateSensitivity = 0.4f;
+    private bool isJump, isBack, isForward, isStatic, canJump;
+    private bool canShoot = true;
 
     void Start()
     {
@@ -46,22 +32,25 @@ public class PlayerMovement : MonoBehaviour
         rbPlayer = GetComponent<Rigidbody>();
         mgInventory = GetComponent<InventoryManager>();
         svManager = FindObjectOfType<SavepointsManager>();
-        if(svManager != null){
+        if (svManager != null)
+        {
             transform.position = svManager.GetSavePoint(GameManager.instance.lastSP).position;
         }
         LoadProfile();
-
-        //PlayerCollision.OnDeath += GameOverBehaviour;
         PlayerEvent.onDeath += GameOverBehaviour;
     }
 
-    public void LoadProfile(){
-        if(ProfileManager.instance != null){
+    public void LoadProfile()
+    {
+        if (ProfileManager.instance != null)
+        {
             playerNameLabel.text = ProfileManager.instance.GetPlayerName();
             playerNameLabel.enabled = ProfileManager.instance.GetVisibleName();
             rotateSensitivity = ProfileManager.instance.GetMouseSensitivity();
-        }else{
-             playerNameLabel.enabled = false;
+        }
+        else
+        {
+            playerNameLabel.enabled = false;
         }
     }
 
@@ -90,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
     private void UseGem(GameObject gem)
     {
         gem.SetActive(true);
-        gem.transform.position = transform.position + (Vector3.forward  * 2f);
+        gem.transform.position = transform.position + (Vector3.forward * 2f);
     }
 
     private void UseItemInventoryTwo()
@@ -117,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         float playerSpeed = rbPlayer.velocity.magnitude;
-        bool isLimit = (playerSpeed > speedLimit);
+        bool isLimit = (playerSpeed > playerData.SpeedLimit);
 
         if (isForward && !isLimit)
         {
@@ -131,8 +120,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (isJump)
         {
-            rbPlayer.AddForce(Vector3.up * speedJump, ForceMode.Impulse);
+            rbPlayer.AddForce(Vector3.up * playerData.SpeedJump, ForceMode.Impulse);
             isJump = false;
+        }
+
+        if (!isBack && !isForward && canJump && !isJump)
+        {
+            Vector3 stopVelocity = new Vector3(1f, rbPlayer.velocity.y, 1f);
+            rbPlayer.velocity = stopVelocity;
         }
 
     }
@@ -141,11 +136,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
-            audioPlayer.PlayOneShot(jumpSound, 0.5f);
-            //ACTIVO VARIABLE BOOLEAN AL DETECTAR INPUT.
+            audioPlayer.PlayOneShot(playerData.JumpSound, 0.5f);
             isJump = true;
-            //transform.Translate(Vector3.up * speedJump);
-            //rbPlayer.AddForce(Vector3.up * speedJump, ForceMode.Impulse);
         }
     }
 
@@ -169,7 +161,7 @@ public class PlayerMovement : MonoBehaviour
             timePass += Time.deltaTime;
         }
 
-        if (timePass > cooldown)
+        if (timePass > playerData.Cooldown)
         {
             timePass = 0;
             canShoot = true;
@@ -179,8 +171,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void DelayShoot()
     {
-        audioPlayer.PlayOneShot(shootSound, 0.5f);
-        GameObject newBullet = Instantiate(bulletPrefab, shootPoint.transform.position, transform.rotation);// PROYECTILES
+        audioPlayer.PlayOneShot(playerData.ShootSound, 0.5f);
+        GameObject newBullet = Instantiate(playerData.BulletPrefab, shootPoint.transform.position, transform.rotation);
         newBullet.transform.parent = parentBullets.transform;
     }
 
@@ -188,34 +180,52 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            //MovePlayer(Vector3.forward);
             playerAnimator.SetBool("isRun", true);
             isForward = true;
+            EnableVFXStep();
         }
         if (Input.GetKey(KeyCode.S))
         {
-            //MovePlayer(Vector3.back);
             playerAnimator.SetBool("isRun", true);
             isBack = true;
+            EnableVFXStep();
         }
 
         if (Input.GetKeyUp(KeyCode.W))
         {
             playerAnimator.SetBool("isRun", false);
             isForward = false;
+            DiseableVFXStep();
         }
 
         if (Input.GetKeyUp(KeyCode.S))
         {
             playerAnimator.SetBool("isRun", false);
             isBack = false;
+            DiseableVFXStep();
+        }
+    }
+
+    private void EnableVFXStep()
+    {
+        if (!stepVFX.isPlaying)
+        {
+            stepVFX.Play();
+        }
+    }
+
+
+    private void DiseableVFXStep()
+    {
+        if (stepVFX.isPlaying)
+        {
+            stepVFX.Stop();
         }
     }
 
     private void MoveRelativeForce(Vector3 direction)
     {
-        //transform.Translate(speed * Time.deltaTime * direction);
-        rbPlayer.AddRelativeForce(speed * direction, ForceMode.Acceleration);
+        rbPlayer.AddRelativeForce(playerData.Speed * direction, ForceMode.VelocityChange);
     }
 
     private void RotatePlaye()
@@ -228,12 +238,14 @@ public class PlayerMovement : MonoBehaviour
         transform.localRotation = angulo;
     }
 
-    public InventoryManager GetPlayerInventory(){
+    public InventoryManager GetPlayerInventory()
+    {
         return mgInventory;
     }
 
-    public void GameOverBehaviour(){
-        GetComponent<Rigidbody>().isKinematic = true;        
+    public void GameOverBehaviour()
+    {
+        GetComponent<Rigidbody>().isKinematic = true;
         playerAnimator.SetBool("isRun", false);
         this.enabled = false;
     }

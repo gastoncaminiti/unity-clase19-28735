@@ -8,8 +8,9 @@ public class EnemyBee : Enemy
 
     private Rigidbody rbEnemy;
 
-    private void Start()
+     protected override void Start()
     {
+        base.Start();
         rbEnemy = GetComponent<Rigidbody>();
         InvokeRepeating("JumpBee", 0f, delayJump);
         enemyStats.HP++;
